@@ -1,0 +1,10 @@
+{
+  "start": "Hello, {user.username}\n",
+  "help": "This is PlanExBot",
+  "current_notify_info": "I will notify you at {time} every day",
+  "incorrect_interval_query": "Incorrect format",
+  "new_notify_info": "You set new notify time. I will notify you at {time} every day",
+  "choosing_subject": "Please, choose a subject to study from the keyboard below",
+  "incorrect_subject_choice": "Choose subject from keyboard",
+  "chosen_subject": "You choose {subject} subject"
+}

@@ -13,3 +13,6 @@ dp = Dispatcher(bot, loop=event_loop, storage=storage)
 
 with open('messages.json') as file:
     messages = json.load(file)
+
+with open('config.json') as file:
+    config = json.load(file)

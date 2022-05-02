@@ -42,7 +42,7 @@ async def set_interval(message: types.Message):
     if time is None:
         return await message.answer(messages['incorrect_notification_date'])
     await UserStates.settings.set()
-    scheduler.add_notification(str(message.from_user.id), time)
+    scheduler.add_notification(message.from_user.id, time)
     await message.answer(messages['new_notification_date'].format(time=time.strftime('%H:%M')),
                          reply_markup=settings_keyboard)
 

@@ -80,4 +80,3 @@ def parse_interval_message(args: str):
 
 
 available_subjects = ['English language', 'Math', 'Russian language']
-

@@ -40,7 +40,7 @@ class Scheduler:
         self._scheduler.shutdown()
 
 
-scheduler = Scheduler(
+notify_scheduler = Scheduler(
     event_loop,
     min_silence_interval=config['notification_scheduler']['min_silence_interval_in_hours']
 )

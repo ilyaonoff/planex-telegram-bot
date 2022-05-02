@@ -1,7 +1,7 @@
 import datetime
 
 from model.database.client import db_client
-from scheduler import scheduler
+from notification import notify_scheduler
 
 
 async def set_subject(user_id: int, subject: str):
@@ -15,5 +15,5 @@ async def is_ready_to_study(user_id: int):
 
 
 async def set_notification(user_id: int, time: datetime.datetime):
-    scheduler.add_notification(user_id, time)
+    notify_scheduler.add_notification(user_id, time)
     return time

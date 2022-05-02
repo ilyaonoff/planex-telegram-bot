@@ -16,6 +16,11 @@ async def _job(user_id: int, min_silence_interval: int):
 class Scheduler:
     def __init__(self, loop, min_silence_interval: int):
         self._scheduler = AsyncIOScheduler(event_loop=loop)
+        # TODO configure mongoclient
+        self._scheduler.add_jobstore(
+            'mongodb',
+            database='notification_scheduler'
+        )
         self._scheduler.start()
         self.min_silence_interval = min_silence_interval
 

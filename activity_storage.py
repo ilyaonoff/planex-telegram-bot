@@ -46,6 +46,9 @@ class ActivityStorage:
     def get_last_activity(self, user_id: int) -> Optional[datetime]:
         return self._last_activity.get(user_id, None)
 
+    def shutdown(self):
+        self._scheduler.shutdown()
+
 
 activity_storage = ActivityStorage(
     event_loop,

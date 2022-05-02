@@ -40,7 +40,8 @@ async def set_interval(message: types.Message):
     args = message.text
     time = parse_interval_message(args)
     if time is None:
-        return await message.answer(messages['incorrect_notification_date'])
+        await message.answer(messages['incorrect_notification_date'])
+        return
     await UserStates.settings.set()
     scheduler.add_notification(message.from_user.id, time)
     await message.answer(messages['new_notification_date'].format(time=time.strftime('%H:%M')),
@@ -56,7 +57,8 @@ async def set_subject(message: types.Message):
 @dp.message_handler(state=UserStates.subject)
 async def choose_subject(message: types.Message):
     if message.text not in available_subjects:
-        return await message.answer(messages['incorrect_subject_choice'], reply_markup=subject_keyboard)
+        await message.answer(messages['incorrect_subject_choice'], reply_markup=subject_keyboard)
+        return
     await UserStates.settings.set()
     await message.answer(messages['finish_choosing_subject'].format(subject=message.text), reply_markup=settings_keyboard)
 

@@ -25,6 +25,7 @@ async def get_task(message: types.Message, state: FSMContext):
     with user(message.from_user.id) as can_handle:
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
+            return
         task = random_task()
         async with state.proxy() as data:
             data['answer'] = task[1]['answer']
@@ -37,6 +38,7 @@ async def receive_answer(message: types.Message, state: FSMContext):
     with user(message.from_user.id) as can_handle:
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
+            return
         async with state.proxy() as data:
             expected_answer = data['answer']
         await UserStates.wait_for_task.set()

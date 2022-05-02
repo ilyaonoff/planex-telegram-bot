@@ -10,5 +10,6 @@
   "incorrect_subject_choice": "incorrect_subject_choice",
   "finish_choosing_subject": "finish_choosing_subject",
   "too_frequent_messages": "too_frequent_messages",
-  "notification": "notification"
+  "notification": "notification",
+  "info": "info"
 }

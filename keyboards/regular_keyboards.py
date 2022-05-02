@@ -10,7 +10,8 @@ settings_keyboard.add('◀️ Назад')
 cancel_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 cancel_keyboard.add('◀️ Отменить')
 
-available_subjects = ['English language', 'Math', 'Russian language']
+# TODO
+available_subjects = ['Обществознание']
 
 subject_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 subject_keyboard.add(*available_subjects)

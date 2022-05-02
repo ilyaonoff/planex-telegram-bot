@@ -8,7 +8,7 @@ from datetime import datetime
 from bot import messages
 from keyboards import default_keyboard, settings_keyboard, subject_keyboard, cancel_keyboard
 from activity_storage import user
-from model import users
+from model import users, subjects
 
 
 @dp.message_handler(Text(equals='⚙️ Настроить'), state='*')
@@ -59,7 +59,7 @@ async def set_subject(message: types.Message):
 
 @dp.message_handler(state=UserStates.subject)
 async def choose_subject(message: types.Message):
-    if message.text not in available_subjects:
+    if message.text not in await subjects.get_available_subjects():
         await message.answer(messages['incorrect_subject_choice'], reply_markup=subject_keyboard)
         return
     with user(message.from_user.id) as can_handle:
@@ -77,6 +77,3 @@ def parse_interval_message(args: str):
         return datetime.strptime(args, '%H:%M')
     except ValueError:
         return None
-
-
-available_subjects = ['English language', 'Math', 'Russian language']

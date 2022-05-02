@@ -11,5 +11,6 @@
   "finish_choosing_subject": "finish_choosing_subject",
   "too_frequent_messages": "too_frequent_messages",
   "notification": "notification",
-  "info": "info"
+  "info": "info",
+  "unfinished_configuration": "unfinished_configuration"
 }

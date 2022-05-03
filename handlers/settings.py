@@ -6,9 +6,9 @@ from bot import dp
 from states import UserStates
 
 from aiogram import types
-from datetime import datetime
+import datetime
 from bot import messages
-from keyboards import default_keyboard, settings_keyboard, subject_keyboard, cancel_keyboard
+from keyboards import default_keyboard, settings_keyboard, cancel_keyboard
 from activity_storage import user
 from model import users, subjects
 from views import setting_views
@@ -56,13 +56,14 @@ async def set_interval(message: types.Message):
 @dp.message_handler(Text(equals='📚 Выбрать предмет'), state=UserStates.settings)
 async def set_subject(message: types.Message):
     await UserStates.subject.set()
-    await message.answer(messages['start_choosing_subject'], reply_markup=subject_keyboard)
+    subject_data = await subjects.get_available_subjects()
+    await setting_views.available_subjects(dp, message, subject_data)
 
 
 @dp.message_handler(state=UserStates.subject)
 async def choose_subject(message: types.Message):
-    if message.text not in await subjects.get_available_subjects():
-        await message.answer(messages['incorrect_subject_choice'], reply_markup=subject_keyboard)
+    if not await subjects.validate_subject(message.text):
+        await message.answer(messages['incorrect_subject_choice'])
         return
     with user(message.from_user.id) as can_handle:
         if not can_handle:
@@ -75,6 +76,6 @@ async def choose_subject(message: types.Message):
 
 def parse_interval_message(args: str) -> Optional[datetime.time]:
     try:
-        return datetime.strptime(args, '%H:%M').time()
+        return datetime.datetime.strptime(args, '%H:%M').time()
     except ValueError:
         return None

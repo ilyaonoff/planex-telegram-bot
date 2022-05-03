@@ -1,5 +1,5 @@
 import datetime
-from typing import Tuple, Dict, Optional, List, Any
+from typing import Dict, Optional, List, Any
 
 
 from model.database.client import db_client

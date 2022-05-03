@@ -9,6 +9,7 @@ from bot import messages
 from keyboards import default_keyboard, settings_keyboard, subject_keyboard, cancel_keyboard
 from activity_storage import user
 from model import users, subjects
+from views import setting_views
 
 
 @dp.message_handler(Text(equals='⚙️ Настроить'), state='*')
@@ -45,10 +46,9 @@ async def set_interval(message: types.Message):
     if time is None:
         await message.answer(messages['incorrect_notification_date'])
         return
-    time = await users.set_notification(message.from_user.id, time)
+    notification_data = await users.set_notification(message.from_user.id, time)
+    await setting_views.notification_setup(dp, message, notification_data)
     await UserStates.settings.set()
-    await message.answer(messages['new_notification_date'].format(time=time.strftime('%H:%M')),
-                         reply_markup=settings_keyboard)
 
 
 @dp.message_handler(Text(equals='📚 Выбрать предмет'), state=UserStates.settings)
@@ -66,10 +66,9 @@ async def choose_subject(message: types.Message):
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
             return
-        await users.set_subject(message.from_user.id, message.text)
+        subject_data = await users.set_subject(message.from_user.id, message.text)
+        await setting_views.subject_setup(dp, message, subject_data)
         await UserStates.settings.set()
-    await message.answer(messages['finish_choosing_subject'].format(subject=message.text),
-                         reply_markup=settings_keyboard)
 
 
 def parse_interval_message(args: str):

@@ -15,6 +15,6 @@ async def start_handler(message: types.Message):
 
 
 @dp.message_handler(Text(equals='ℹ️ Информация'),
-                    state=[UserStates.wait_for_task, UserStates.wait_for_answer])
+                    state=[UserStates.default])
 async def info(message: types.Message):
     await message.answer(messages['info'], reply_markup=default_keyboard)

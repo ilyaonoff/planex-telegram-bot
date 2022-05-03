@@ -22,7 +22,7 @@ async def back_from_configure(message: types.Message):
     if not await users.is_ready_to_study(message.from_user.id):
         await message.answer(messages['unfinished_configuration'], reply_markup=settings_keyboard)
         return
-    await UserStates.wait_for_task.set()
+    await UserStates.default.set()
     await message.answer(messages['finish_configure'], reply_markup=default_keyboard)
 
 

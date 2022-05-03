@@ -1,6 +1,7 @@
 from aiogram import types
 
 default_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+default_keyboard.add('Тренировка')
 default_keyboard.add('ℹ️ Информация', '⚙️ Настроить')
 
 settings_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -15,3 +16,6 @@ available_subjects = ['Обществознание']
 
 subject_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 subject_keyboard.add(*available_subjects)
+
+training_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+training_keyboard.add('🔚 Закончить')

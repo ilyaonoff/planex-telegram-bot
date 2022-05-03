@@ -12,6 +12,14 @@ def random_task() -> Tuple[str, Dict[str, str]]:
     return random.choice(list(tasks.items()))
 
 
+async def start_training(user_id: int):
+    pass
+
+
+async def finish_training(user_id: int):
+    pass
+
+
 async def get_task(user_id: int) -> str:
     task = random_task()
     users_collection = db_client.planex.users

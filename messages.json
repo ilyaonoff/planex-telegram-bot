@@ -12,5 +12,7 @@
   "too_frequent_messages": "too_frequent_messages",
   "notification": "notification",
   "info": "info",
-  "unfinished_configuration": "unfinished_configuration"
+  "unfinished_configuration": "unfinished_configuration",
+  "start_training": "start_training",
+  "finish_training": "finish_training"
 }

@@ -6,6 +6,12 @@ from model.database.client import db_client
 
 
 active_users = {}
+intervals = {
+    1: datetime.timedelta(days=1),
+    2: datetime.timedelta(weeks=1),
+    3: datetime.timedelta(weeks=2),
+    4: datetime.timedelta(weeks=4)
+}
 
 
 async def init_subject(user_id: int, subject: str):
@@ -42,7 +48,7 @@ async def next_level(user_id: int, subject: str, pred_level=None) -> Optional[in
 async def random_tasks(user_id: int, subject: str, level: int, time: datetime.datetime) -> List[Dict[str, Any]]:
     return await db_client.planex.tasks.aggregate([
         {'$match': {'user_id': user_id, 'level': level, 'next_training': {'$lte': time}}},
-        {'$project': {'task_id': 1}},
+        {'$project': {'_id': 1, 'task_id': 1}},
         {'$sample': {'size': 5}}
     ]).to_list(5)
 
@@ -63,7 +69,7 @@ async def finish_training(user_id: int):
 
 async def get_task(user_id: int) -> Dict:
     user_data = active_users[user_id]
-    if user_data['current_task'] == len(user_data['tasks']) - 1:
+    if len(user_data['tasks']) == 0 or user_data['current_task'] == len(user_data['tasks']) - 1:
         level = await next_level(user_id, 'subject', pred_level=user_data['current_level'])
         if level is None:
             return {'is_end': True}
@@ -88,7 +94,18 @@ async def get_task(user_id: int) -> Dict:
 async def receive_answer(user_id: int, answer: str) -> Dict:
     user_data = active_users[user_id]
     task = await db_client.planex.original_tasks.find_one({'_id': user_data['tasks'][user_data['current_task']]['task_id']})
+    is_correct = task['answer'].strip() == answer
+    if is_correct:
+        level = min(4, user_data['current_level'] + 1)
+    else:
+        level = max(1, user_data['current_level'] - 1)
+    next_training = datetime.datetime.now() + intervals[level]
+    await db_client.planex.tasks.update_one(
+        {'_id': user_data['tasks'][user_data['current_task']]['_id']},
+        {'$set': {'level': level, 'next_training': next_training}},
+        upsert=False
+    )
     result = {
-        'is_correct': task['answer'].strip() == answer
+        'is_correct': is_correct
     }
     return result

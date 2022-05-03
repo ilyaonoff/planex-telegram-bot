@@ -48,7 +48,6 @@ async def random_tasks(user_id: int, subject: str, level: int, time: datetime.da
 
 
 async def start_training(user_id: int):
-    # TODO subject and next_level == None
     level = await next_level(user_id, 'subject')
     tasks_to_study = await random_tasks(user_id, 'subject', level, datetime.datetime.now())
     active_users[user_id] = {
@@ -62,11 +61,12 @@ async def finish_training(user_id: int):
     active_users.pop(user_id)
 
 
-async def get_task(user_id: int) -> str:
+async def get_task(user_id: int) -> Dict:
     user_data = active_users[user_id]
     if user_data['current_task'] == len(user_data['tasks']) - 1:
-        # TODO level == 1
         level = await next_level(user_id, 'subject', pred_level=user_data['current_level'])
+        if level is None:
+            return {'is_end': True}
         tasks_to_study = await random_tasks(user_id, 'subject', level, datetime.datetime.now())
         user_data = active_users[user_id] = {
             'current_level': level,
@@ -78,10 +78,17 @@ async def get_task(user_id: int) -> str:
     else:
         user_data['current_task'] += 1
     task = await db_client.planex.original_tasks.find_one({'_id': user_data['tasks'][user_data['current_task']]['task_id']})
-    return task['task']
+    result = {
+        'task': task['task'],
+        'is_end': False
+    }
+    return result
 
 
-async def receive_answer(user_id: int, answer: str) -> bool:
+async def receive_answer(user_id: int, answer: str) -> Dict:
     user_data = active_users[user_id]
     task = await db_client.planex.original_tasks.find_one({'_id': user_data['tasks'][user_data['current_task']]['task_id']})
-    return task['answer'].strip() == answer
+    result = {
+        'is_correct': task['answer'].strip() == answer
+    }
+    return result

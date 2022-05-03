@@ -6,6 +6,7 @@ from bot import dp, messages
 from states import UserStates
 from activity_storage import user
 from model import tasks
+from views import task_views
 
 from aiogram import types
 
@@ -24,15 +25,19 @@ async def finish_training(message: types.Message):
     await message.answer(messages['finish_training'], reply_markup=default_keyboard)
 
 
-@dp.message_handler(state=UserStates.wait_for_task)
+@dp.message_handler(Text(equals='▶ Вперёд'), state=UserStates.wait_for_task)
 async def get_task(message: types.Message):
     with user(message.from_user.id) as can_handle:
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
             return
-        task_text = await tasks.get_task(message.from_user.id)
-        await UserStates.wait_for_answer.set()
-    await message.answer(task_text, reply_markup=training_keyboard)
+        task_data = await tasks.get_task(message.from_user.id)
+        is_end = await task_views.send_task(dp, message, task_data)
+        if is_end:
+            await tasks.finish_training(message.from_user.id)
+            await UserStates.default.set()
+        else:
+            await UserStates.wait_for_answer.set()
 
 
 @dp.message_handler(state=UserStates.wait_for_answer)
@@ -41,9 +46,6 @@ async def receive_answer(message: types.Message):
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
             return
-        result = await tasks.receive_answer(message.from_user.id, message.text)
+        answer_data = await tasks.receive_answer(message.from_user.id, message.text)
+        await task_views.send_result(dp, message, answer_data)
         await UserStates.wait_for_task.set()
-    if result:
-        await message.answer('Your answer is correct', reply_markup=training_keyboard)
-    else:
-        await message.answer('You are wrong', reply_markup=training_keyboard)

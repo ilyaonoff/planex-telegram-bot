@@ -2,11 +2,14 @@ import datetime
 
 from model.database.client import db_client
 from notification import notify_scheduler
+from .tasks import init_subject, is_first_time
 
 
 async def set_subject(user_id: int, subject: str):
     users_collection = db_client.planex.users
     await users_collection.update_one({'user_id': user_id}, {'$set': {'subject': subject}}, upsert=True)
+    if await is_first_time(user_id, subject):
+        await init_subject(user_id, subject)
 
 
 async def is_ready_to_study(user_id: int):

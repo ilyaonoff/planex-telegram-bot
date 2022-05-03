@@ -16,5 +16,5 @@ class TwoStageTraining(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def second_stage(self, user_id: int,  message: str) -> Dict:
+    async def second_stage(self, user_id: int, message: str) -> Dict:
         pass

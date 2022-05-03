@@ -23,7 +23,7 @@ class QuestionAnswerTraining(TwoStageTraining):
         if pred_level is not None:
             task_filter['level'] = {'$lt': pred_level}
         task_with_needed_level = \
-            await self.user_task_collection.find(task_filter)\
+            await self.user_task_collection.find(task_filter) \
                 .sort('level', -1) \
                 .limit(1) \
                 .to_list(1)

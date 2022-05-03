@@ -13,7 +13,7 @@ async def _job(user_id: int, min_silence_interval: int):
         await dp.bot.send_message(user_id, messages['notification'])
 
 
-class Scheduler:
+class NotificationScheduler:
     def __init__(self, loop, min_silence_interval: int):
         self._scheduler = AsyncIOScheduler(event_loop=loop)
         # TODO configure mongoclient
@@ -44,7 +44,7 @@ class Scheduler:
         self._scheduler.shutdown()
 
 
-notify_scheduler = Scheduler(
+notify_scheduler = NotificationScheduler(
     event_loop,
     min_silence_interval=config['notification_scheduler']['min_silence_interval_in_hours']
 )

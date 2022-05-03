@@ -1,7 +1,6 @@
 import datetime
 from typing import Dict
 
-
 from . import users
 from .question_answer_training import QuestionAnswerTraining
 from .base_training import TwoStageTraining

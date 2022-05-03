@@ -1,9 +1,17 @@
 import datetime
-from typing import Dict
+from typing import Dict, Optional
 
 from model.database.client import db_client
 from notification import notify_scheduler
-from .tasks import init_subject, is_first_time
+from .training import init_subject, is_first_time
+
+
+async def get_subject(user_id: int) -> Optional[str]:
+    user = await db_client.planex.users.find_one({'user_id': user_id})
+    if 'subject' in user:
+        return user['subject']
+    else:
+        return None
 
 
 async def set_subject(user_id: int, subject: str) -> Dict:

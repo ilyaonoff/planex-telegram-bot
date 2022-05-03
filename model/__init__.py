@@ -1,3 +1,3 @@
 from . import users
 from . import subjects
-from . import tasks
+from . import training

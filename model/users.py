@@ -25,12 +25,16 @@ async def set_subject(user_id: int, subject: str) -> Dict:
     return result
 
 
-async def is_ready_to_study(user_id: int):
+async def is_ready_to_study(user_id: int) -> bool:
     users_collection = db_client.planex.users
     return await users_collection.count_documents({'user_id': user_id, 'subject': {'$exists': True}}) > 0
 
 
-async def set_notification(user_id: int, time: datetime.datetime) -> Dict:
+async def get_notification_time(user_id: int) -> datetime.time:
+    return notify_scheduler.get_notification_time(user_id)
+
+
+async def set_notification_time(user_id: int, time: datetime.time) -> Dict:
     notify_scheduler.add_notification(user_id, time)
     result = {
         'new_notification_time': time

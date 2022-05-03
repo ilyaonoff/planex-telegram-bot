@@ -24,7 +24,7 @@ class Scheduler:
         self._scheduler.start()
         self.min_silence_interval = min_silence_interval
 
-    def add_notification(self, user_id: int, time: datetime.datetime):
+    def add_notification(self, user_id: int, time: datetime.time):
         self._scheduler.add_job(
             _job, args=(user_id, self.min_silence_interval),
             id=str(user_id), replace_existing=True,
@@ -32,6 +32,10 @@ class Scheduler:
             hour=time.hour.real,
             minute=time.minute.real
         )
+
+    def get_notification_time(self, user_id) -> datetime.time:
+        trigger = self._scheduler.get_job(str(user_id)).trigger
+        return datetime.time(hour=trigger.hour, minute=trigger.minute)
 
     def remove_notification(self, user_id: int):
         self._scheduler.remove_job(str(user_id))

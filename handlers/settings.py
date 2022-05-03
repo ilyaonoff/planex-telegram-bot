@@ -1,3 +1,5 @@
+from typing import Optional
+
 from aiogram.dispatcher.filters import Text
 
 from bot import dp
@@ -46,7 +48,7 @@ async def set_interval(message: types.Message):
     if time is None:
         await message.answer(messages['incorrect_notification_date'])
         return
-    notification_data = await users.set_notification(message.from_user.id, time)
+    notification_data = await users.set_notification_time(message.from_user.id, time)
     await setting_views.notification_setup(dp, message, notification_data)
     await UserStates.settings.set()
 
@@ -71,8 +73,8 @@ async def choose_subject(message: types.Message):
         await UserStates.settings.set()
 
 
-def parse_interval_message(args: str):
+def parse_interval_message(args: str) -> Optional[datetime.time]:
     try:
-        return datetime.strptime(args, '%H:%M')
+        return datetime.strptime(args, '%H:%M').time()
     except ValueError:
         return None

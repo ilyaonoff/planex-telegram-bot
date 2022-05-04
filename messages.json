@@ -4,7 +4,7 @@
   "finish_configure": "finish_configure",
   "choose_notification_date": "choose_notification_date",
   "back_from_notification_configuration": "back_from_notification_configuration",
-  "incorrect_notification_date": "incorrect_notification_date",
+  "incorrect_notification_date": "incorrect_notification_date. Correct format: HH:MM",
   "new_notification_date": "new_notification_date",
   "start_choosing_subject": "start_choosing_subject",
   "incorrect_subject_choice": "incorrect_subject_choice",

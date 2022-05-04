@@ -69,7 +69,7 @@ class QuestionAnswerTraining(TwoStageTraining):
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
         result = {
-            'task': task['task'],
+            'question': task['question'],
             'is_end': False
         }
         return result

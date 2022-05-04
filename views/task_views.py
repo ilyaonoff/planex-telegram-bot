@@ -10,7 +10,7 @@ async def send_task(dispatcher: Dispatcher, message: types.Message, data: Dict) 
         await message.answer('This training has been finished', reply_markup=default_keyboard)
         return True
     else:
-        await message.answer(data['task'], reply_markup=training_keyboard)
+        await message.answer(data['question'], reply_markup=training_keyboard)
         return False
 
 

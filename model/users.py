@@ -27,7 +27,7 @@ async def set_subject(user_id: int, subject: str) -> Dict:
 
 async def is_ready_to_study(user_id: int) -> bool:
     users_collection = db_client.planex.users
-    return await users_collection.count_documents({'user_id': user_id, 'subject': {'$exists': True}}) > 0
+    return await users_collection.find_one({'user_id': user_id, 'subject': {'$exists': True}}) is not None
 
 
 async def get_notification_time(user_id: int) -> datetime.time:

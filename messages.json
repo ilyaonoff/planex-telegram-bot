@@ -14,5 +14,6 @@
   "info": "info",
   "unfinished_configuration": "unfinished_configuration",
   "start_training": "start_training",
-  "finish_training": "finish_training"
+  "finish_training": "finish_training",
+  "bot_was_updated": "bot_was_updated"
 }

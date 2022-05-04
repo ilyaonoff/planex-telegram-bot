@@ -1,10 +1,12 @@
 from aiogram.dispatcher.filters import Text
 from aiogram import types
+
 from bot import dp
 from bot_logging import logger
 from bot import messages
 from keyboards import default_keyboard, settings_keyboard
 from states import UserStates
+from model import users
 
 
 @dp.message_handler(commands=['start'])
@@ -18,3 +20,14 @@ async def start_handler(message: types.Message):
                     state=[UserStates.default])
 async def info(message: types.Message):
     await message.answer(messages['info'], reply_markup=default_keyboard)
+
+
+@dp.message_handler()
+async def bot_restart_handler(message: types.Message):
+    if await users.is_ready_to_study(message.from_user.id):
+        await UserStates.default.set()
+        keyboard = default_keyboard
+    else:
+        await UserStates.settings.set()
+        keyboard = settings_keyboard
+    await message.answer(messages['bot_was_updated'], reply_markup=keyboard)

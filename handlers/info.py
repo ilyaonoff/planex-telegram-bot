@@ -11,7 +11,7 @@ from model import users
 
 @dp.message_handler(commands=['start'])
 async def start_handler(message: types.Message):
-    logger.info(f'Start or help message from user {message.from_user.id}')
+    logger.info(f'Start message from user {message.from_user.id}')
     await UserStates.settings.set()
     await message.answer(messages['start'].format(user=message.from_user), reply_markup=settings_keyboard)
 

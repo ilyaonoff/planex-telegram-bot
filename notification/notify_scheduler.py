@@ -1,12 +1,10 @@
 import datetime
-from bot_logging import logger
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot import dp, event_loop, messages, config
 from activity_storage import activity_storage
 
 
 async def _job(user_id: int, min_silence_interval: int):
-    logger.info(f'Run notify job for user {user_id}')
     last_user_activity = activity_storage.get_last_activity(user_id)
     now = datetime.datetime.now()
     if last_user_activity is None or last_user_activity - now >= datetime.timedelta(hours=min_silence_interval):

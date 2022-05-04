@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot import event_loop, config
+from bot_logging import logger
 
 
 class ActivityStorage:
@@ -20,12 +21,14 @@ class ActivityStorage:
         self._scheduler.start()
 
     def _clean(self):
+        logger.info(f'The number of active users before cleaning: {len(self._last_activity)}')
         now = datetime.now()
         for user_id in self._last_activity.keys():
             last_activity = self._last_activity[user_id]
             if not self._locked[user_id] and last_activity - now >= timedelta(days=self.silence_interval):
                 self._locked.pop(user_id)
                 self._last_activity.pop(user_id)
+        logger.info(f'The number of active users after cleaning: {len(self._last_activity)}')
 
     def try_lock(self, user_id: int) -> bool:
         if self._locked.get(user_id, False):

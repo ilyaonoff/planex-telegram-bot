@@ -1,5 +1,5 @@
 import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 from model.database.client import db_client
 from notification import notify_scheduler
@@ -23,6 +23,19 @@ async def set_subject(user_id: int, subject: str) -> Dict:
         'new_subject': subject
     }
     return result
+
+
+async def set_training(user_id: int, training: str):
+    users_collection = db_client.planex.users
+    await users_collection.update_one({'user_id': user_id}, {'$set': {'training': training}})
+
+
+async def get_training(user_id: int) -> Optional[Tuple[str, str]]:
+    user = await db_client.planex.users.find_one({'user_id': user_id})
+    if 'training' in user:
+        return user['subject'], user['training']
+    else:
+        return None
 
 
 async def is_ready_to_study(user_id: int) -> bool:

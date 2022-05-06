@@ -2,7 +2,15 @@ from typing import Dict
 
 from aiogram import Dispatcher, types
 
+from bot import messages
 from keyboards import training_keyboard, default_keyboard
+
+
+async def choose_training(dispatcher: Dispatcher, message: types.Message, data: Dict):
+    subject_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    for subject in data['trainings']:
+        subject_keyboard.add(subject)
+    await message.answer(messages['choose_training'], reply_markup=subject_keyboard)
 
 
 async def send_task(dispatcher: Dispatcher, message: types.Message, data: Dict) -> bool:

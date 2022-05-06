@@ -1,11 +1,11 @@
 {
   "start": "Hello, {user.username}\n",
-  "start_configure": "start_configure",
-  "finish_configure": "finish_configure",
-  "choose_notification_date": "choose_notification_date",
+  "start_configure": "start_configuring",
+  "finish_configure": "finish_configuring",
+  "choose_notification_date": "choose_notification_time",
   "back_from_notification_configuration": "back_from_notification_configuration",
-  "incorrect_notification_date": "incorrect_notification_date. Correct format: HH:MM",
-  "new_notification_date": "new_notification_date",
+  "incorrect_notification_date": "incorrect_notification_time. Correct format: HH:MM",
+  "new_notification_date": "new_notification_time",
   "start_choosing_subject": "start_choosing_subject",
   "incorrect_subject_choice": "incorrect_subject_choice",
   "finish_choosing_subject": "finish_choosing_subject",
@@ -15,5 +15,7 @@
   "unfinished_configuration": "unfinished_configuration",
   "start_training": "start_training",
   "finish_training": "finish_training",
-  "bot_was_updated": "bot_was_updated"
+  "bot_was_updated": "bot_was_updated",
+  "choose_training": "choose_training",
+  "incorrect_training": "incorrect_training"
 }

@@ -5,15 +5,25 @@ from keyboards import default_keyboard, training_keyboard
 from bot import dp, messages
 from states import UserStates
 from activity_storage import user
-from model import training
+from model import training, subjects, users
 from views import task_views
 
 from aiogram import types
 
 
 @dp.message_handler(Text(equals='Тренировка'), state=UserStates.default)
+async def start_choose_training(message: types.Message):
+    trainings = await subjects.get_available_trainings(await users.get_subject(message.from_user.id))
+    await task_views.choose_training(dp, message, trainings)
+    await UserStates.choose_training.set()
+
+
+@dp.message_handler(state=UserStates.choose_training)
 async def start_training(message: types.Message):
-    await training.start_training(message.from_user.id)
+    if message.text not in (await subjects.get_available_trainings(await users.get_subject(message.from_user.id)))['trainings']:
+        await message.answer(messages['incorrect_training'])
+        return
+    await training.start_training(message.from_user.id, message.text)
     await UserStates.wait_for_task.set()
     await message.answer(messages['start_training'], reply_markup=training_keyboard)
 

@@ -27,3 +27,5 @@ async def send_result(dispatcher: Dispatcher, message: types.Message, data: Dict
         await message.answer('Ты молодец! Нажимай "вперед", и идем дальше :)', reply_markup=training_keyboard)
     else:
         await message.answer('You are wrong(', reply_markup=training_keyboard)
+        if 'association' in data:
+            await message.answer_sticker(data['association'], reply_markup=training_keyboard)

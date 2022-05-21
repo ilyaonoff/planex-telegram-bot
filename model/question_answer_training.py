@@ -67,6 +67,7 @@ class QuestionAnswerTraining(TwoStageTraining):
             user_data['current_task'] = 0
         else:
             user_data['current_task'] += 1
+        user_data['incorrect_answers'] = 0
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
         result = utils.ViewDict({
@@ -75,22 +76,35 @@ class QuestionAnswerTraining(TwoStageTraining):
         })
         return result
 
-    async def second_stage(self, user_id: int, message: str) -> Tuple[Dict, bool]:
-        user_data = self.active_users[user_id]
-        task = await self.original_collection.find_one(
-            {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
-        is_correct = task['answer'].strip() == message
-        if is_correct:
+    async def _save_task(self, user_data):
+        if user_data['incorrect_answers'] == 0:
             level = min(4, user_data['current_level'] + 1)
-        else:
+        elif user_data['incorrect_answers'] == 2:
             level = max(1, user_data['current_level'] - 1)
+        else:
+            level = user_data['current_level']
         next_training = datetime.datetime.now() + QuestionAnswerTraining.intervals[level]
         await self.user_task_collection.update_one(
             {'_id': user_data['tasks'][user_data['current_task']]['_id']},
             {'$set': {'level': level, 'next_training': next_training}},
             upsert=False
         )
+
+    async def second_stage(self, user_id: int, message: str) -> Tuple[Dict, bool]:
+        user_data = self.active_users[user_id]
+        task = await self.original_collection.find_one(
+            {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
+        is_correct = task['answer'].strip() == message
+        user_data['incorrect_answers'] += not is_correct
+        if is_correct or user_data['incorrect_answers'] == 2:
+            await self._save_task(user_data)
+        finish_answering = is_correct or (user_data['incorrect_answers'] == 2)
         result = utils.ViewDict({
-            'is_correct': is_correct
+            'is_correct': is_correct,
+            'finish_answering': finish_answering,
+            'incorrect_answers': user_data['incorrect_answers']
         })
-        return result, True
+        if user_data['incorrect_answers'] == 1 and not finish_answering:
+            # TODO
+            result['association'] = task.get('association', 'CAACAgIAAxkBAAEEx2ViiMaq-ze8gAhdHeKOoVjVhQddOAAC0hAAAqjD4EoueyWr4CsTwyQE')
+        return result, finish_answering

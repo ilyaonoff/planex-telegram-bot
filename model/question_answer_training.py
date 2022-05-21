@@ -1,8 +1,9 @@
 import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 
 from model.base_training import TwoStageTraining
 import utils
+
 
 class QuestionAnswerTraining(TwoStageTraining):
     intervals = {
@@ -74,7 +75,7 @@ class QuestionAnswerTraining(TwoStageTraining):
         })
         return result
 
-    async def second_stage(self, user_id: int, message: str) -> Dict:
+    async def second_stage(self, user_id: int, message: str) -> Tuple[Dict, bool]:
         user_data = self.active_users[user_id]
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
@@ -92,4 +93,4 @@ class QuestionAnswerTraining(TwoStageTraining):
         result = utils.ViewDict({
             'is_correct': is_correct
         })
-        return result
+        return result, True

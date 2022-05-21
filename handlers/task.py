@@ -56,6 +56,7 @@ async def receive_answer(message: types.Message):
         if not can_handle:
             await message.answer(messages['too_frequent_messages'])
             return
-        answer_data = await training.second_stage(message.from_user.id, message.text)
+        answer_data, finish_answering = await training.second_stage(message.from_user.id, message.text)
         await task_views.send_result(dp, message, answer_data)
-        await UserStates.wait_for_task.set()
+        if finish_answering:
+            await UserStates.wait_for_task.set()

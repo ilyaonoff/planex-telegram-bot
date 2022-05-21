@@ -129,7 +129,7 @@ class QuestionAnswerTraining(TwoStageTraining):
             if user_data['incorrect_answers'] == 0:
                 user_data['statistics']['correct'] += 1
             elif user_data['incorrect_answers'] == 1:
-                user_data['statistics']['correct_with_hints'] += 1
+                user_data['statistics']['correct_with_hint'] += 1
         finish_answering = is_correct or (user_data['incorrect_answers'] == 2)
         result = utils.ViewDict({
             'is_correct': is_correct,

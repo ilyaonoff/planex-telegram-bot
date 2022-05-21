@@ -1,6 +1,7 @@
 from typing import Dict
 
 from model.database.client import db_client
+import utils
 
 
 async def validate_subject(subject: str) -> bool:
@@ -8,16 +9,16 @@ async def validate_subject(subject: str) -> bool:
 
 
 async def get_available_trainings(subject: str) -> Dict:
-    return {
+    return utils.ViewDict({
         'subject': subject,
         'trainings': ['Термины']
-    }
+    })
 
 
 async def get_available_subjects():
-    return {
+    return utils.ViewDict({
         'subjects': ['Обществознание']
-    }
+    })
 
 
 def get_task_collection_by_subject_name(subject: str, training: str):

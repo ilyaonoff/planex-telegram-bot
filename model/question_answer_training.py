@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, List, Dict, Any
 
 from model.base_training import TwoStageTraining
-
+import utils
 
 class QuestionAnswerTraining(TwoStageTraining):
     intervals = {
@@ -68,10 +68,10 @@ class QuestionAnswerTraining(TwoStageTraining):
             user_data['current_task'] += 1
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
-        result = {
+        result = utils.ViewDict({
             'question': task['question'],
             'is_end': False
-        }
+        })
         return result
 
     async def second_stage(self, user_id: int, message: str) -> Dict:
@@ -89,7 +89,7 @@ class QuestionAnswerTraining(TwoStageTraining):
             {'$set': {'level': level, 'next_training': next_training}},
             upsert=False
         )
-        result = {
+        result = utils.ViewDict({
             'is_correct': is_correct
-        }
+        })
         return result

@@ -32,8 +32,8 @@ class NotificationScheduler:
         )
 
     def get_notification_time(self, user_id) -> datetime.time:
-        trigger = self._scheduler.get_job(str(user_id)).trigger
-        return datetime.time(hour=trigger.hour, minute=trigger.minute)
+        job = self._scheduler.get_job(str(user_id))
+        return job.next_run_time.time()
 
     def remove_notification(self, user_id: int):
         self._scheduler.remove_job(str(user_id))

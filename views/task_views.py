@@ -24,6 +24,6 @@ async def send_task(dispatcher: Dispatcher, message: types.Message, data: Dict) 
 
 async def send_result(dispatcher: Dispatcher, message: types.Message, data: Dict):
     if data['is_correct']:
-        await message.answer('You are right)', reply_markup=training_keyboard)
+        await message.answer('Ты молодец! Нажимай "вперед", и идем дальше :)', reply_markup=training_keyboard)
     else:
         await message.answer('You are wrong(', reply_markup=training_keyboard)

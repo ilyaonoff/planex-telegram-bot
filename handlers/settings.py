@@ -2,6 +2,7 @@ from typing import Optional
 
 from aiogram.dispatcher.filters import Text
 
+import utils
 from bot import dp
 from states import UserStates
 
@@ -26,7 +27,10 @@ async def back_from_configure(message: types.Message):
         await message.answer(messages['unfinished_configuration'], reply_markup=settings_keyboard)
         return
     await UserStates.default.set()
-    await message.answer(messages['finish_configure'], reply_markup=default_keyboard)
+    training_time = await users.get_notification_time(message.from_user.id)
+    subject = await users.get_subject(message.from_user.id)
+    data = utils.ViewDict({'training_time': training_time.strftime("%H:%M"), 'subject': subject})
+    await message.answer(messages['finish_configure'].format(data=data), reply_markup=default_keyboard)
 
 
 @dp.message_handler(Text(equals='🕘 Выбрать интервал'), state=UserStates.settings)

@@ -2,6 +2,7 @@ from typing import Optional
 
 from aiogram.dispatcher.filters import Text
 
+import bot
 import utils
 from bot import dp
 from states import UserStates
@@ -21,7 +22,7 @@ async def configure(message: types.Message):
     await message.answer(messages['start_configure'], reply_markup=settings_keyboard)
 
 
-@dp.message_handler(Text(equals='◀️ Назад'), state=UserStates.settings)
+@dp.message_handler(Text(equals='◀️ Закончить настройку'), state=UserStates.settings)
 async def back_from_configure(message: types.Message):
     if not await users.is_ready_to_study(message.from_user.id):
         await message.answer(messages['unfinished_configuration'], reply_markup=settings_keyboard)

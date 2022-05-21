@@ -6,7 +6,7 @@ default_keyboard.add('ℹ️ Информация', '⚙️ Настроить')
 
 settings_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 settings_keyboard.add('🕘 Выбрать интервал', '📚 Выбрать предмет')
-settings_keyboard.add('◀️ Назад')
+settings_keyboard.add('◀️ Закончить настройку')
 
 cancel_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 cancel_keyboard.add('◀️ Отменить')

@@ -7,10 +7,21 @@ from bot import messages
 from keyboards import training_keyboard, default_keyboard
 
 
+async def start_training(dispatcher: Dispatcher, message: types.Message, data: Dict):
+    if data['is_started']:
+        await message.answer(messages['start_training'], reply_markup=training_keyboard)
+    else:
+        view_data = utils.ViewDict({
+            'date_not_empty_training': data['date_not_empty_training'].strftime("%Y-%m-%d %H:%M")
+        })
+        await message.answer(messages['nothing_to_train'].format(data=view_data))
+
+
 async def choose_training(dispatcher: Dispatcher, message: types.Message, data: Dict):
     subject_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     for subject in data['trainings']:
         subject_keyboard.add(subject)
+    subject_keyboard.add('◀️ Назад')
     await message.answer(messages['choose_training'].format(data=data), reply_markup=subject_keyboard)
 
 

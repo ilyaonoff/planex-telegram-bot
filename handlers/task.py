@@ -1,5 +1,6 @@
 from aiogram.dispatcher.filters import Text
 
+import views.task_views
 from keyboards import default_keyboard, training_keyboard
 
 from bot import dp, messages
@@ -18,14 +19,21 @@ async def start_choose_training(message: types.Message):
     await UserStates.choose_training.set()
 
 
+@dp.message_handler(Text(equals='◀️ Назад'), state=UserStates.choose_training)
+async def cancel_choosing_training(message: types.Message):
+    await UserStates.default.set()
+    await message.answer(messages['back_from_choosing_training'], reply_markup=default_keyboard)
+
+
 @dp.message_handler(state=UserStates.choose_training)
 async def start_training(message: types.Message):
     if message.text not in (await subjects.get_available_trainings(await users.get_subject(message.from_user.id)))['trainings']:
         await message.answer(messages['incorrect_training'])
         return
-    await training.start_training(message.from_user.id, message.text)
-    await UserStates.wait_for_task.set()
-    await message.answer(messages['start_training'], reply_markup=training_keyboard)
+    model_data, is_started = await training.start_training(message.from_user.id, message.text)
+    if is_started:
+        await UserStates.wait_for_task.set()
+    await views.task_views.start_training(dp, message, model_data)
 
 
 @dp.message_handler(Text(equals='🔚 Закончить'), state=[UserStates.wait_for_task, UserStates.wait_for_answer])

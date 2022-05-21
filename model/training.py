@@ -1,6 +1,7 @@
 import datetime
-from typing import Dict
+from typing import Dict, Tuple
 
+import utils
 from . import users
 from .question_answer_training import QuestionAnswerTraining
 from .base_training import TwoStageTraining
@@ -29,10 +30,12 @@ async def is_first_time(user_id: int, subject: str) -> bool:
     return user_task is None
 
 
-async def start_training(user_id: int, training: str):
+async def start_training(user_id: int, training: str) -> Tuple[utils.ViewDict, bool]:
     user_subject = await users.get_subject(user_id)
-    await users.set_training(user_id, training)
-    await trainings[user_subject][training].start_training(user_id)
+    data, is_started = await trainings[user_subject][training].start_training(user_id)
+    if is_started:
+        await users.set_training(user_id, training)
+    return data, is_started
 
 
 async def finish_training(user_id: int):

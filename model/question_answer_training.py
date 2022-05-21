@@ -39,7 +39,23 @@ class QuestionAnswerTraining(TwoStageTraining):
             {'$sample': {'size': 5}}
         ]).to_list(5)
 
-    async def start_training(self, user_id: int):
+    async def get_date_not_empty_training(self, user_id: int) -> datetime.datetime:
+        task_filter = {'user_id': user_id}
+        task_with_needed_date = \
+            await self.user_task_collection.find(task_filter) \
+                .sort('next_training', 1) \
+                .limit(1) \
+                .to_list(1)
+        return task_with_needed_date[0]['next_training']
+
+    async def start_training(self, user_id: int) -> Tuple[utils.ViewDict, bool]:
+        date_not_empty_training = await self.get_date_not_empty_training(user_id)
+        if date_not_empty_training > datetime.datetime.now():
+            result = utils.ViewDict({
+                'is_started': False,
+                'date_not_empty_training': date_not_empty_training
+            })
+            return result, False
         level = await self._next_level(user_id)
         tasks_to_study = await self._random_tasks(user_id, level, datetime.datetime.now())
         self.active_users[user_id] = {
@@ -52,6 +68,7 @@ class QuestionAnswerTraining(TwoStageTraining):
                 'correct_with_hint': 0
             }
         }
+        return utils.ViewDict({'is_started': True}), True
 
     async def finish_training(self, user_id: int):
         self.active_users.pop(user_id)

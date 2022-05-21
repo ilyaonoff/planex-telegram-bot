@@ -51,10 +51,15 @@ async def second_stage(user_id: int, message: str) -> Dict:
 
 
 trainings: Dict[str, Dict[str, TwoStageTraining]] = {
-    'Обществознание': {
-        'Термины': QuestionAnswerTraining(
-            original_collection=subjects.get_task_collection_by_subject_name('Обществознание', 'Термины'),
-            user_task_collection=subjects.get_user_task_collection_by_subject_name('Обществознание', 'Термины')
+    'Русский язык': {
+        'Ударения': QuestionAnswerTraining(
+            original_collection=subjects.get_task_collection_by_subject_name('Русский язык', 'Ударения'),
+            user_task_collection=subjects.get_user_task_collection_by_subject_name('Русский язык', 'Ударения')
+        ),
+        'Паронимы': QuestionAnswerTraining(
+            original_collection=subjects.get_task_collection_by_subject_name('Русский язык', 'Паронимы'),
+            user_task_collection=subjects.get_user_task_collection_by_subject_name('Русский язык', 'Паронимы')
         )
+
     }
 }

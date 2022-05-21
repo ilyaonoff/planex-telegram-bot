@@ -5,19 +5,19 @@ import utils
 
 
 async def validate_subject(subject: str) -> bool:
-    return subject in ['Обществознание']
+    return subject in ['Русский язык']
 
 
 async def get_available_trainings(subject: str) -> Dict:
     return utils.ViewDict({
         'subject': subject,
-        'trainings': ['Термины']
+        'trainings': ['Ударения', 'Паронимы']
     })
 
 
 async def get_available_subjects():
     return utils.ViewDict({
-        'subjects': ['Обществознание']
+        'subjects': ['Русский язык']
     })
 
 
@@ -30,10 +30,14 @@ def get_user_task_collection_by_subject_name(subject: str, training: str):
 
 
 _task_collection = {
-    'Обществознание': {
-        'Термины': {
-            'task': db_client.planex.society.terms,
-            'user_task': db_client.planex.user_society.terms
+    'Русский язык': {
+        'Ударения': {
+            'task': db_client.planex.russian.accents,
+            'user_task': db_client.planex.user_russian.accents
+        },
+        'Паронимы': {
+            'task': db_client.planex.russian.paronyms,
+            'user_task': db_client.planex.user_russian.paronyms
         }
     }
 }

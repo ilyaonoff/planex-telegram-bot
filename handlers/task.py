@@ -32,7 +32,7 @@ async def start_training(message: types.Message):
 async def finish_training(message: types.Message):
     await training.finish_training(message.from_user.id)
     await UserStates.default.set()
-    await message.answer(messages['finish_training'], reply_markup=default_keyboard)
+    await message.answer(messages['interrupt_training'], reply_markup=default_keyboard)
 
 
 @dp.message_handler(Text(equals='▶ Вперёд'), state=UserStates.wait_for_task)

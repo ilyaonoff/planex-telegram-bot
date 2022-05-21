@@ -45,7 +45,12 @@ class QuestionAnswerTraining(TwoStageTraining):
         self.active_users[user_id] = {
             'current_level': level,
             'tasks': tasks_to_study,
-            'current_task': None
+            'current_task': None,
+            'statistics':  {
+                'total': 0,
+                'correct': 0,
+                'correct_with_hint': 0
+            }
         }
 
     async def finish_training(self, user_id: int):
@@ -56,7 +61,10 @@ class QuestionAnswerTraining(TwoStageTraining):
         if len(user_data['tasks']) == 0 or user_data['current_task'] == len(user_data['tasks']) - 1:
             level = await self._next_level(user_id, pred_level=user_data['current_level'])
             if level is None:
-                return {'is_end': True}
+                return {
+                    'is_end': True,
+                    'statistics': user_data['statistics']
+                }
             tasks_to_study = await self._random_tasks(user_id, level, datetime.datetime.now())
             user_data = self.active_users[user_id] = {
                 'current_level': level,
@@ -92,12 +100,19 @@ class QuestionAnswerTraining(TwoStageTraining):
 
     async def second_stage(self, user_id: int, message: str) -> Tuple[Dict, bool]:
         user_data = self.active_users[user_id]
+        if user_data['incorrect_answers'] == 0:
+            user_data['statistics']['total'] += 1
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
         is_correct = task['answer'].strip() == message
         user_data['incorrect_answers'] += not is_correct
         if is_correct or user_data['incorrect_answers'] == 2:
             await self._save_task(user_data)
+        if is_correct:
+            if user_data['incorrect_answers'] == 0:
+                user_data['statistics']['correct'] += 1
+            elif user_data['incorrect_answers'] == 1:
+                user_data['statistics']['correct_with_hints'] += 1
         finish_answering = is_correct or (user_data['incorrect_answers'] == 2)
         result = utils.ViewDict({
             'is_correct': is_correct,

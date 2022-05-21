@@ -2,6 +2,7 @@ from typing import Dict
 
 from aiogram import Dispatcher, types
 
+import utils
 from bot import messages
 from keyboards import training_keyboard, default_keyboard
 
@@ -10,12 +11,13 @@ async def choose_training(dispatcher: Dispatcher, message: types.Message, data: 
     subject_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     for subject in data['trainings']:
         subject_keyboard.add(subject)
-    await message.answer(messages['choose_training'], reply_markup=subject_keyboard)
+    await message.answer(messages['choose_training'].format(data=data), reply_markup=subject_keyboard)
 
 
 async def send_task(dispatcher: Dispatcher, message: types.Message, data: Dict) -> bool:
     if data['is_end']:
-        await message.answer('This training has been finished', reply_markup=default_keyboard)
+        view_data = utils.ViewDict(data['statistics'])
+        await message.answer(messages['finish_training'].format(data=view_data), reply_markup=default_keyboard)
         return True
     else:
         await message.answer(data['question'], reply_markup=training_keyboard)

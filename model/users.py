@@ -44,7 +44,7 @@ async def is_ready_to_study(user_id: int) -> bool:
     return await users_collection.find_one({'user_id': user_id, 'subject': {'$exists': True}}) is not None
 
 
-async def get_notification_time(user_id: int) -> datetime.time:
+async def get_notification_time(user_id: int) -> Optional[datetime.time]:
     return notify_scheduler.get_notification_time(user_id)
 
 

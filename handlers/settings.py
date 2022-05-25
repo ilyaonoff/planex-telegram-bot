@@ -30,7 +30,11 @@ async def back_from_configure(message: types.Message):
     await UserStates.default.set()
     training_time = await users.get_notification_time(message.from_user.id)
     subject = await users.get_subject(message.from_user.id)
-    data = utils.ViewDict({'training_time': training_time.strftime("%H:%M"), 'subject': subject})
+    data = utils.ViewDict({'subject': subject})
+    if training_time is not None:
+        data['training_time'] = training_time.strftime("%H:%M")
+    else:
+        data['training_time'] = 'Не установлено'
     await message.answer(messages['finish_configure'].format(data=data), reply_markup=default_keyboard)
 
 
@@ -43,7 +47,10 @@ async def configure_interval(message: types.Message):
 @dp.message_handler(Text(equals='◀️ Отменить'), state=UserStates.interval)
 async def cancel_choosing_interval(message: types.Message):
     await UserStates.settings.set()
-    await message.answer(messages['back_from_notification_configuration'], reply_markup=settings_keyboard)
+    response = messages['back_from_notification_configuration']
+    if await users.is_ready_to_study(message.from_user.id):
+        response += "\n\n" + messages['info_about_settings']
+    await message.answer(response, reply_markup=settings_keyboard)
 
 
 @dp.message_handler(state=UserStates.interval)
@@ -75,6 +82,7 @@ async def choose_subject(message: types.Message):
             await message.answer(messages['too_frequent_messages'])
             return
         subject_data = await users.set_subject(message.from_user.id, message.text)
+        subject_data['is_ready_to_study'] = await users.is_ready_to_study(message.from_user.id)
         await setting_views.subject_setup(dp, message, subject_data)
         await UserStates.settings.set()
 

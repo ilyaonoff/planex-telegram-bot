@@ -1,4 +1,6 @@
 import datetime
+from typing import Optional
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot import dp, event_loop, messages, config
 from activity_storage import activity_storage
@@ -31,9 +33,11 @@ class NotificationScheduler:
             minute=time.minute.real
         )
 
-    def get_notification_time(self, user_id) -> datetime.time:
+    def get_notification_time(self, user_id) -> Optional[datetime.time]:
         job = self._scheduler.get_job(str(user_id))
-        return job.next_run_time.time()
+        if job is not None:
+            return job.next_run_time.time()
+        return None
 
     def remove_notification(self, user_id: int):
         self._scheduler.remove_job(str(user_id))

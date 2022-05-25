@@ -20,4 +20,7 @@ async def notification_setup(dispatcher: Dispatcher, message: types.Message, dat
 
 
 async def subject_setup(dispatcher: Dispatcher, message: types.Message, data: Dict):
-    await message.answer(messages['finish_choosing_subject'].format(data=data), reply_markup=settings_keyboard)
+    response = messages['finish_choosing_subject'].format(data=data)
+    if data['is_ready_to_study']:
+        response += '\n\n' + messages['info_about_settings']
+    await message.answer(response, reply_markup=settings_keyboard)

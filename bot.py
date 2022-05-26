@@ -1,9 +1,12 @@
-import os
+import os, time
 from aiogram import Bot, Dispatcher
 import asyncio
 import json
 
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+
+os.environ['TZ'] = 'Europe/Moscow'
+time.tzset()
 
 TOKEN = os.getenv('BOT_TOKEN')
 

@@ -28,8 +28,19 @@ async def info(message: types.Message):
     await message.answer(messages['info'], reply_markup=default_keyboard)
 
 
+@dp.message_handler(commands=['start'],
+                    state=[UserStates.settings, UserStates.interval, UserStates.subject, UserStates.default,
+                           UserStates.choose_training, UserStates.wait_for_task, UserStates.wait_for_answer])
+async def come_to_start(message: types.Message):
+    await _restart(message, 'hello_again')
+
+
 @dp.message_handler()
 async def bot_restart_handler(message: types.Message):
+    await _restart(message, 'bot_was_updated')
+
+
+async def _restart(message: types.Message, response: str):
     with activity_storage.user(message.from_user.id) as can_handle:
         if not can_handle:
             await error_handlers.handle_throttling(message)
@@ -40,4 +51,4 @@ async def bot_restart_handler(message: types.Message):
         else:
             await UserStates.settings.set()
             keyboard = settings_keyboard
-        await message.answer(messages['bot_was_updated'], reply_markup=keyboard)
+        await message.answer(messages[response], reply_markup=keyboard)

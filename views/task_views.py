@@ -37,8 +37,8 @@ async def send_task(dispatcher: Dispatcher, message: types.Message, data: Dict) 
 
 async def send_result(dispatcher: Dispatcher, message: types.Message, data: Dict):
     if data['is_correct']:
-        await message.answer('Ты молодец! Нажимай "вперед", и идем дальше :)', reply_markup=training_keyboard)
+        await message.answer(messages['correct_answer'], reply_markup=training_keyboard)
     else:
-        await message.answer('Ой-ой:( Кажется, твой ответ неправильный. Давай мы дадим тебе небольшую подсказку для запоминания.', reply_markup=training_keyboard)
+        await message.answer(messages['wrong_answer'], reply_markup=training_keyboard)
         if 'association' in data:
             await message.answer_sticker(data['association'], reply_markup=training_keyboard)

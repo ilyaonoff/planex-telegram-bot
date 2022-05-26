@@ -62,7 +62,7 @@ class QuestionAnswerTraining(TwoStageTraining):
             'current_level': level,
             'tasks': tasks_to_study,
             'current_task': None,
-            'statistics':  {
+            'statistics': {
                 'total': 0,
                 'correct': 0,
                 'correct_with_hint': 0
@@ -138,5 +138,6 @@ class QuestionAnswerTraining(TwoStageTraining):
         })
         if user_data['incorrect_answers'] == 1 and not finish_answering:
             # TODO
-            result['association'] = task.get('association', 'CAACAgIAAxkBAAEEx2ViiMaq-ze8gAhdHeKOoVjVhQddOAAC0hAAAqjD4EoueyWr4CsTwyQE')
+            result['association'] = task.get('association',
+                                             'CAACAgIAAxkBAAEEx2ViiMaq-ze8gAhdHeKOoVjVhQddOAAC0hAAAqjD4EoueyWr4CsTwyQE')
         return result, finish_answering

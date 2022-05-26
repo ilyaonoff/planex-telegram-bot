@@ -42,7 +42,9 @@ async def start_training(message: types.Message):
         if not can_handle:
             await error_handlers.handle_throttling(message)
             return
-        if message.text not in (await subjects.get_available_trainings(await users.get_subject(message.from_user.id)))['trainings']:
+        subject = await users.get_subject(message.from_user.id)
+        available_trainings = await subjects.get_available_trainings(subject)
+        if message.text not in available_trainings['trainings']:
             await message.answer(messages['incorrect_training'])
             return
         model_data, is_started = await training.start_training(message.from_user.id, message.text)

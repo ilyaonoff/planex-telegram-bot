@@ -18,7 +18,6 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-
 DB_CONNECTION = os.getenv('DB_CONNECTION')
 
 event_loop = asyncio.get_event_loop()

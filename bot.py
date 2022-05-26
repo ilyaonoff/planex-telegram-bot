@@ -23,10 +23,9 @@ WEBAPP_PORT = os.getenv('PORT', default=8000)
 
 MONGODB_URI = os.getenv('MONGODB_URI')
 
-event_loop = asyncio.get_event_loop()
 bot = Bot(token=TOKEN)
 storage = MemoryStorage()
-dp = Dispatcher(bot, loop=event_loop, storage=storage)
+dp = Dispatcher(bot, storage=storage)
 
 with open('messages.json') as file:
     messages = json.load(file)

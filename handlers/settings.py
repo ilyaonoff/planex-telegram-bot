@@ -14,7 +14,7 @@ from keyboards import default_keyboard, settings_keyboard, cancel_keyboard
 from activity_storage import user
 from model import users, subjects
 from views import setting_views
-import error_handlers
+from . import error_handlers
 
 
 @dp.message_handler(Text(equals='⚙️ Настроить'), state='*')

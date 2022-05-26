@@ -8,7 +8,7 @@ from keyboards import default_keyboard, settings_keyboard
 from states import UserStates
 from model import users
 import activity_storage
-import error_handlers
+from . import error_handlers
 
 
 @dp.message_handler(commands=['start'])

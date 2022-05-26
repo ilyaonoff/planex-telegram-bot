@@ -12,7 +12,7 @@ from views import task_views
 from aiogram import types
 
 import activity_storage
-import error_handlers
+from . import error_handlers
 
 
 @dp.message_handler(Text(equals='Тренировка'), state=UserStates.default)

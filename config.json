@@ -5,6 +5,6 @@
     "silence_interval_in_days": 2
   },
   "notification_scheduler": {
-    "min_silence_interval_in_hours": 12
+    "min_silence_interval_in_hours": 1
   }
 }

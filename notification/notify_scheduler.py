@@ -31,12 +31,14 @@ class NotificationScheduler:
             _job, args=(user_id, self.min_silence_interval),
             id=str(user_id), replace_existing=True,
             trigger='cron',
+            timezone='Europe/Moscow',
             hour=time.hour.real,
             minute=time.minute.real
         )
 
     def get_notification_time(self, user_id) -> Optional[datetime.time]:
         job = self._scheduler.get_job(str(user_id))
+        print(job.next_run_time)
         if job is not None:
             return job.next_run_time.time()
         return None

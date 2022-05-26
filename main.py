@@ -12,7 +12,7 @@ async def on_shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
     notification.notify_scheduler.shutdown()
-    activity_storage.activity_storage.shutdown()
+    activity_storage.shutdown()
 
 
 async def on_startup(dispatcher: Dispatcher):

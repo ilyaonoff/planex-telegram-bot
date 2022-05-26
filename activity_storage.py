@@ -62,11 +62,11 @@ activity_storage = ActivityStorage(
 
 
 @contextmanager
-def user(user_id: int):
+def user(user_id: int, store_activity=False):
     locked = False
     try:
         locked = activity_storage.try_lock(user_id)
-        if locked:
+        if store_activity and locked:
             activity_storage.new_activity(user_id)
         yield locked
     finally:

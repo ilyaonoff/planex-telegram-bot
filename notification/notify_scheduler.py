@@ -17,7 +17,7 @@ async def _job(user_id: int, min_silence_interval: int):
 
 class NotificationScheduler:
     def __init__(self, loop, min_silence_interval: int):
-        self._scheduler = AsyncIOScheduler(event_loop=loop)
+        self._scheduler = AsyncIOScheduler(event_loop=loop, timezone="Europe/Moscow")
         self._scheduler.add_jobstore(
             'mongodb',
             database='notification_scheduler',

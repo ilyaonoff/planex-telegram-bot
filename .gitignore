@@ -1,0 +1,4 @@
+venv/
+bot.log
+.idea/
+__pycache__/

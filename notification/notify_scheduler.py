@@ -4,7 +4,7 @@ from typing import Optional
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pymongo import MongoClient
 
-from bot import dp, event_loop, messages, config, DB_CONNECTION
+from bot import dp, event_loop, messages, config, MONGODB_URI
 from activity_storage import activity_storage
 
 
@@ -21,7 +21,7 @@ class NotificationScheduler:
         self._scheduler.add_jobstore(
             'mongodb',
             database='notification_scheduler',
-            client=MongoClient(DB_CONNECTION)
+            client=MongoClient(MONGODB_URI)
         )
         self._scheduler.start()
         self.min_silence_interval = min_silence_interval

@@ -1,4 +1,4 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from bot import DB_CONNECTION
+from bot import MONGODB_URI
 
-db_client = AsyncIOMotorClient(DB_CONNECTION)
+db_client = AsyncIOMotorClient(MONGODB_URI)

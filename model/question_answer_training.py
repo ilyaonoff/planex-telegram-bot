@@ -65,8 +65,7 @@ class QuestionAnswerTraining(TwoStageTraining):
             'current_task': None,
             'statistics': {
                 'total': 0,
-                'correct': 0,
-                'correct_with_hint': 0
+                'correct': 0
             }
         }
         return utils.ViewDict({'is_started': True}), True

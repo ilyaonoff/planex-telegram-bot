@@ -13,10 +13,11 @@ class QuestionAnswerTraining(TwoStageTraining):
         4: datetime.timedelta(weeks=4)
     }
 
-    def __init__(self, original_collection, user_task_collection):
+    def __init__(self, original_collection, user_task_collection, validate_answer):
         super(QuestionAnswerTraining, self).__init__()
         self.original_collection = original_collection
         self.user_task_collection = user_task_collection
+        self.validate_answer = validate_answer
         self.active_users = {}
 
     async def _next_level(self, user_id: int, pred_level=None) -> Optional[int]:
@@ -117,7 +118,7 @@ class QuestionAnswerTraining(TwoStageTraining):
         user_data['statistics']['total'] += 1
         task = await self.original_collection.find_one(
             {'_id': user_data['tasks'][user_data['current_task']]['task_id']})
-        is_correct = task['answer'].strip() == message
+        is_correct = self.validate_answer(message, task['answer'])
         await self._save_task(user_data, is_correct)
         if is_correct:
             user_data['statistics']['correct'] += 1

@@ -39,6 +39,8 @@ async def send_result(dispatcher: Dispatcher, message: types.Message, data: Dict
     if data['is_correct']:
         await message.answer(messages['correct_answer'], reply_markup=training_keyboard)
     else:
-        await message.answer(messages['wrong_answer'], reply_markup=training_keyboard)
         if 'association' in data:
+            await message.answer(messages['wrong_answer_with_association'], reply_markup=training_keyboard)
             await message.answer_sticker(data['association'], reply_markup=training_keyboard)
+        else:
+            await message.answer(messages['wrong_answer'].format(data=data), reply_markup=training_keyboard)

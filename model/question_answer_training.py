@@ -125,7 +125,9 @@ class QuestionAnswerTraining(TwoStageTraining):
             'is_correct': is_correct,
             'finish_answering': True
         })
-        # TODO
-        result['association'] = task.get('association',
-                                         'CAACAgIAAxkBAAEEx2ViiMaq-ze8gAhdHeKOoVjVhQddOAAC0hAAAqjD4EoueyWr4CsTwyQE')
+        if 'association' in task:
+            result['association'] = task.get('association',
+                                             'CAACAgIAAxkBAAEEx2ViiMaq-ze8gAhdHeKOoVjVhQddOAAC0hAAAqjD4EoueyWr4CsTwyQE')
+        else:
+            result['correct_answer'] = task['answer']
         return result, True

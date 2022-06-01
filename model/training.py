@@ -59,7 +59,7 @@ trainings: Dict[str, Dict[str, TwoStageTraining]] = {
         'Ударения': QuestionAnswerTraining(
             original_collection=subjects.get_task_collection_by_subject_name('Русский язык', 'Ударения'),
             user_task_collection=subjects.get_user_task_collection_by_subject_name('Русский язык', 'Ударения'),
-            validate_answer=answer_validation.lower_strip_equal
+            validate_answer=answer_validation.strip_equal
         ),
         'Паронимы': QuestionAnswerTraining(
             original_collection=subjects.get_task_collection_by_subject_name('Русский язык', 'Паронимы'),
